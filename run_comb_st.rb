@@ -1,6 +1,7 @@
 require 'octokit'
 require 'json'
 require 'optparse'
+require 'colorize'
 
 options = OpenStruct.new
 options.branch = 'master'
@@ -51,7 +52,11 @@ loop do
   workflow_array = last_response.data[:workflow_runs]
   workflow_array.each do |item|
     if item[:head_sha] == git_sha
-      puts "#{item[:conclusion]} #{item[:name]}"
+      if item[:conclusion] == 'success'
+        puts "#{item[:conclusion].green} #{item[:name]}"
+      else
+        puts "#{item[:conclusion].red} #{item[:name]}"
+      end
     end
   end
 
